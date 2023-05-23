@@ -33,12 +33,12 @@
                     {?>
                         {% for uneExpo in lesExpos %}
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id={{ uneExpo.id}} name={{ uneExpo.id}} <p>
+                            <input class="form-check-input" type="checkbox" id={{ uneExpo.id}} <p>
                             {{ uneExpo.nomExpo }}</p>
                             <label class="form-check-label" for="expo<?php echo $expo['id']?>">
                                 <?php echo $expo['nomExpo'] ?>
                             </label>
-                            <input class="form-check-input" type="checkbox" id={{ uneExpo.id}} name=id={{ uneExpo.id}} <p>{{ uneExpo.nomExpo }}</p>
+
 
                         </div>
                         {% endfor %}

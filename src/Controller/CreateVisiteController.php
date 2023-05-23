@@ -23,10 +23,14 @@ class CreateVisiteController extends AbstractController
         $visite -> setNbVisiteurEnfant(0);
         $visite -> setDateHeureArrivee(new \DateTime("now"));
         $visite -> setDateHeureDepart(null);
-        dd($visite);
+
         $nbAdultes= $request ->get('nbAdultes');
         $nbEnfants = $request ->get ('nbEnfants');
+        if (isset($nbAdultes, $nbEnfants)) {
+            $visite->setNbVisiteurEnfant($nbEnfants);
+            $visite->setNbVisiteurAdulte($nbAdultes);
 
+        }
 
         //echo $nbEnfants;
         //echo $nbAdultes;
