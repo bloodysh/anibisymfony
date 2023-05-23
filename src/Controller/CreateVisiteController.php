@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Visite;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Exposition;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Polyfill\Intl\Icu\DateFormat\DayOfWeekTransformer;
 
 
 class CreateVisiteController extends AbstractController
@@ -16,16 +18,22 @@ class CreateVisiteController extends AbstractController
     public function index(Request $request, ManagerRegistry $doctrine): Response
     {
         $lesExpos = $doctrine -> getRepository(Exposition::class)-> findAll();
-
+        $visite = new Visite();
+        $visite -> setNbVisiteurAdulte(0);
+        $visite -> setNbVisiteurEnfant(0);
+        $visite -> setDateHeureArrivee(new \DateTime("now"));
+        $visite -> setDateHeureDepart(null);
+        dd($visite);
         $nbAdultes= $request ->get('nbAdultes');
         $nbEnfants = $request ->get ('nbEnfants');
-        echo $nbAdultes;
-        echo $nbEnfants;
-        $i= 1;
 
-        for ($i=1; $i=count($lesExpos); $i++){
-            $request->get($i);
-        }
+
+        //echo $nbEnfants;
+        //echo $nbAdultes;
+
+
+
+
 
         return $this->render('create_visite/index.html.twig', [
             'controller_name' => 'CreateVisiteController',

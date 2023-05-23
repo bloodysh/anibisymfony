@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VisiteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,6 +27,15 @@ class Visite
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $DateHeureDepart = null;
+
+    #[ORM\ManyToMany(targetEntity: Exposition::class, inversedBy: 'visites')]
+    private Collection $expositions;
+
+    public function __construct()
+    {
+        $this->expositions = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -78,4 +89,44 @@ class Visite
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Exposition>
+     */
+    public function getExpositions(): Collection
+    {
+        return $this->expositions;
+    }
+
+    public function addExposition(Exposition $exposition): self
+    {
+        if (!$this->expositions->contains($exposition)) {
+            $this->expositions->add($exposition);
+        }
+        return $this;
+    }
+
+    public function removeExposition(Exposition $exposition): self
+    {
+        $this->expositions->removeElement($exposition);
+
+        return $this;
+    }
+
+    public function calculerTarif(): float
+    {
+        $totalTarif= 0;
+        foreach ($this -> getExpositions() as $exposition)
+        {
+            $totalTarifAdultes = $this->getNbVisiteurAdulte() * $exposition->getTarifAdulte() ;
+            $totalTarifEnfants = $this->getNbVisiteurEnfant() * $exposition ->getTarifEnfant();
+            $totalTarif+= $totalTarifAdultes + $totalTarifEnfants;
+        }
+        return $totalTarif;
+
+    }
+
+
+
+
 }

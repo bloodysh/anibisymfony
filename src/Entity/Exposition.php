@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ExpositionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ExpositionRepository::class)]
@@ -24,6 +26,14 @@ class Exposition
 
     #[ORM\Column]
     private ?bool $active = null;
+
+    #[ORM\ManyToMany(targetEntity: Visite::class, mappedBy: 'expositions')]
+    private Collection $visites;
+
+    public function __construct()
+    {
+        $this->visites = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -74,6 +84,33 @@ class Exposition
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Visite>
+     */
+    public function getVisites(): Collection
+    {
+        return $this->visites;
+    }
+
+    public function addVisite(Visite $visite): self
+    {
+        if (!$this->visites->contains($visite)) {
+            $this->visites->add($visite);
+            $visite->addExposition($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVisite(Visite $visite): self
+    {
+        if ($this->visites->removeElement($visite)) {
+            $visite->removeExposition($this);
+        }
 
         return $this;
     }
