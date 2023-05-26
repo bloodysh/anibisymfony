@@ -17,31 +17,36 @@ class CreateVisiteController extends AbstractController
     #[Route('/', name: 'app_create_visite')]
     public function index(Request $request, ManagerRegistry $doctrine): Response
     {
+        $jauge=5;
         $lesExpos = $doctrine -> getRepository(Exposition::class)-> findAll();
+
         $visite = new Visite();
-        $visite -> setNbVisiteurAdulte(0);
-        $visite -> setNbVisiteurEnfant(0);
-        $visite -> setDateHeureArrivee(new \DateTime("now"));
-        $visite -> setDateHeureDepart(null);
+        $visite->setNbVisiteurAdulte(0);
+        $visite->setNbVisiteurEnfant(0);
+        $visite->setDateHeureArrivee(new \DateTime("now"));
+        $visite->setDateHeureDepart(null);
+        $nbAdultes=$request->get('nbAdultes');
+        $nbEnfants=$request->get ('nbEnfants');
+        $nbVisiteursEnCours=0;
 
-        $nbAdultes= $request ->get('nbAdultes');
-        $nbEnfants = $request ->get ('nbEnfants');
         if (isset($nbAdultes, $nbEnfants)) {
-            $visite->setNbVisiteurEnfant($nbEnfants);
-            $visite->setNbVisiteurAdulte($nbAdultes);
-
+            $visite->setNbVisiteurEnfant($request->get('nbEnfants'));
+            $visite->setNbVisiteurAdulte($request->get('nbAdultes'));
+            $nbVisiteursEnCours=$nbAdultes+ $nbEnfants;
         }
 
-        //echo $nbEnfants;
-        //echo $nbAdultes;
 
-
-
+        foreach($lesExpos as $uneExpo){
+            if ($request->get('expo'.$uneExpo->getId())){
+                $visite->addExposition($uneExpo);
+            }
+        }
 
 
         return $this->render('create_visite/index.html.twig', [
             'controller_name' => 'CreateVisiteController',
             'lesExpos' => $lesExpos,
+            'visite'=> $visite,
         ]);
     }
 }

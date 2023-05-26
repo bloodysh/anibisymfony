@@ -7,7 +7,7 @@
         <h1>Nouvelle entrée</h1>
     </div>
     <div class="row m-3">
-        <form action="./?action=create_visite" method="post">
+        <form action="{{ path('app_create_visite') }}" method="post">
             <div class="row">
                 <div class="col-lg-6 col-sm-12">
                     <div class="row mb-1">
@@ -15,7 +15,7 @@
                             Nombre d'entrées Adulte
                         </label>
                         <div class="col-6">
-                            <input class="form-control" required type="number" min="0" value="<?php echo $nbAdultes?>" id="nbAdultes" name="nbAdultes">
+                            <input class="form-control" required type="number" min="0" value="{{ visite.nbVisiteurAdulte }}" id="nbAdultes" name="nbAdultes">
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -23,26 +23,23 @@
                             Nombre d'entrées Enfant
                         </label>
                         <div class="col-6">
-                            <input class="form-control" required type="number" min="0" value="<?php echo $nbEnfants?>" id="nbEnfants" name="nbEnfants">
+                            <input class="form-control" required type="number" min="0" value="{{ visite.nbVisiteurEnfant }}" id="nbEnfants" name="nbEnfants">
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-sm-12">
                     <div class="row">
-                        <?php foreach ($expos as $expo)
-                    {?>
+
                         {% for uneExpo in lesExpos %}
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id={{ uneExpo.id}} <p>
-                            {{ uneExpo.nomExpo }}</p>
-                            <label class="form-check-label" for="expo<?php echo $expo['id']?>">
-                                <?php echo $expo['nomExpo'] ?>
+                            <input class="form-check-input" type="checkbox" id={{ uneExpo.id}} name={{ uneExpo.id}} {% if uneExpo in visite.expositions %}checked{% endif %}
+                            <label class="form-check-label" for="{{ uneExpo.id }}">
+                                {{ uneExpo.nomExpo }}
                             </label>
-
 
                         </div>
                         {% endfor %}
-                        <?php %}?>
+
                     </div>
                 </div>
             </div>

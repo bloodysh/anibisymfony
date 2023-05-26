@@ -116,11 +116,10 @@ class Visite
     public function calculerTarif(): float
     {
         $totalTarif= 0;
-        foreach ($this -> getExpositions() as $exposition)
-        {
-            $totalTarifAdultes = $this->getNbVisiteurAdulte() * $exposition->getTarifAdulte() ;
-            $totalTarifEnfants = $this->getNbVisiteurEnfant() * $exposition ->getTarifEnfant();
-            $totalTarif+= $totalTarifAdultes + $totalTarifEnfants;
+        foreach ($this -> getExpositions() as $exposition) {
+            $totalTarifAdultes = $this->getNbVisiteurAdulte() * $exposition->getTarifAdulte();
+            $totalTarifEnfants = $this->getNbVisiteurEnfant() * $exposition->getTarifEnfant();
+            $totalTarif += $totalTarifAdultes + $totalTarifEnfants;
         }
         return $totalTarif;
 
