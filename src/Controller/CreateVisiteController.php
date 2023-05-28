@@ -35,13 +35,17 @@ class CreateVisiteController extends AbstractController
             $nbVisiteursEnCours=$nbAdultes+ $nbEnfants;
         }
 
-
-        foreach($lesExpos as $uneExpo){
-            if ($request->get('expo'.$uneExpo->getId())){
+        foreach ($lesExpos as $uneExpo) {
+            if ($request->get($uneExpo->getId())) {
                 $visite->addExposition($uneExpo);
             }
+
         }
 
+        $leTarif2=$request->get('2');
+        $leTarif1=$request->get('1');
+        //var_dump($leTarif2);
+        //var_dump($visite->calculerTarif());
 
         return $this->render('create_visite/index.html.twig', [
             'controller_name' => 'CreateVisiteController',

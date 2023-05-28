@@ -19,7 +19,7 @@ class Exposition
     private ?string $nomExpo = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $tarifAdulte = null;
+    private ?int $tarifAdulte = null;
 
     #[ORM\Column]
     private ?int $tarifEnfant = null;
