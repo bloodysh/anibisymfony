@@ -19,6 +19,7 @@ class CreateVisiteController extends AbstractController
     {
         $jauge=5;
         $lesExpos = $doctrine -> getRepository(Exposition::class)-> findAll();
+        $lesVisites= $doctrine->getRepository(Visite::class)->findAll();
 
         $visite = new Visite();
         $visite->setNbVisiteurAdulte(0);
@@ -42,10 +43,13 @@ class CreateVisiteController extends AbstractController
 
         }
 
-        $leTarif2=$request->get('2');
-        $leTarif1=$request->get('1');
-        //var_dump($leTarif2);
-        //var_dump($visite->calculerTarif());
+        if ($request->request->has('valider')) {
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($visite);
+            $entityManager->flush();
+
+        }
+
 
         return $this->render('create_visite/index.html.twig', [
             'controller_name' => 'CreateVisiteController',

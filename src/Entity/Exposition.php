@@ -102,7 +102,6 @@ class Exposition
             $this->visites->add($visite);
             $visite->addExposition($this);
         }
-
         return $this;
     }
 
