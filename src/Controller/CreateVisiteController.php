@@ -19,6 +19,7 @@ class CreateVisiteController extends AbstractController
     {
         $jauge=5;
         $lesExpos = $doctrine -> getRepository(Exposition::class)-> findAll();
+        $lesVisites= $doctrine->getRepository(Visite::class)->findAll();
 
         $visite = new Visite();
         $visite->setNbVisiteurAdulte(0);
@@ -35,11 +36,18 @@ class CreateVisiteController extends AbstractController
             $nbVisiteursEnCours=$nbAdultes+ $nbEnfants;
         }
 
-
-        foreach($lesExpos as $uneExpo){
-            if ($request->get('expo'.$uneExpo->getId())){
+        foreach ($lesExpos as $uneExpo) {
+            if ($request->get($uneExpo->getId())) {
                 $visite->addExposition($uneExpo);
             }
+
+        }
+
+        if ($request->request->has('valider')) {
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($visite);
+            $entityManager->flush();
+
         }
 
 
