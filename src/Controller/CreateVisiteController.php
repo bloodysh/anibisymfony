@@ -48,7 +48,19 @@ class CreateVisiteController extends AbstractController
             $entityManager->persist($visite);
             $entityManager->flush();
 
+            return $this->render('create_visite/validation.html.twig',[
+                'visite'=> $visite,
+        ]);
         }
+
+        if ($request->request->has('Retour')){
+            return $this->render('create_visite/index.html.twig', [
+                'controller_name' => 'CreateVisiteController',
+                'lesExpos' => $lesExpos,
+                'visite'=> $visite,
+            ]);
+        }
+
 
 
         return $this->render('create_visite/index.html.twig', [

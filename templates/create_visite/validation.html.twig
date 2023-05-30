@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CreateVisiteController!{% endblock %}
+
+{% block body %}
+    <h1>Validation de la visite numéro {{ visite.id}} </h1>
+    <div class="row m-3">
+        <div class="col-6 d-md-flex justify-content-md-end">
+            <a href="{{ path('app_create_visite') }}"> <button type="submit" name="Retour" class="btn btn-primary">Retour page accueil</button></a>
+        </div>
+    </div>
+{% endblock %}
