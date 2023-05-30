@@ -9,4 +9,6 @@
             <a href="{{ path('app_create_visite') }}"> <button type="submit" name="Retour" class="btn btn-primary">Retour page accueil</button></a>
         </div>
     </div>
+    <img  src="{{ dataUri }}" alt="QR Code">
+    <p>{{ decryptedData }}</p>
 {% endblock %}

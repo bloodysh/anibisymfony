@@ -11,12 +11,33 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Polyfill\Intl\Icu\DateFormat\DayOfWeekTransformer;
 
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\ValidationException;
+
+use Defuse\Crypto\Crypto;
+use Defuse\Crypto\KeyProtectedByPassword;
+
 
 class CreateVisiteController extends AbstractController
+
 {
     #[Route('/', name: 'app_create_visite')]
+
+
+
     public function index(Request $request, ManagerRegistry $doctrine): Response
     {
+        $writer = new PngWriter();
+
+
+
         $jauge=5;
         $lesExpos = $doctrine -> getRepository(Exposition::class)-> findAll();
         $lesVisites= $doctrine->getRepository(Visite::class)->findAll();
@@ -43,13 +64,35 @@ class CreateVisiteController extends AbstractController
 
         }
 
+
+
         if ($request->request->has('valider')) {
             $entityManager = $doctrine->getManager();
             $entityManager->persist($visite);
             $entityManager->flush();
+            $encryptionPassword = 'your_encryption_password';
+            $encryptedData = Crypto::encryptWithPassword($visite->getId().'; Enfants: '.$visite->getNbVisiteurEnfant().';Adultes: '.$visite->getNbVisiteurAdulte().'; Heure: '.$visite->getDateHeureArrivee()->format('Y-m-d H:i:s').';', $encryptionPassword);
+
+
+            $qrCode = QrCode::create($encryptedData)
+                ->setEncoding(new Encoding('UTF-8'))
+                ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
+                ->setSize(300)
+                ->setMargin(10)
+                ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                ->setForegroundColor(new Color(0, 0, 0))
+                ->setBackgroundColor(new Color(255, 255, 255));
+
+
+            $result = $writer->write($qrCode);
+            $dataUri = $result->getDataUri();
+            $decryptedData = Crypto::decrypt($encryptedData, $encryptionPassword);
 
             return $this->render('create_visite/validation.html.twig',[
                 'visite'=> $visite,
+                'dataUri'=> $dataUri,
+                'decryptedData' => $decryptedData,
+
         ]);
         }
 
